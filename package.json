@@ -1,0 +1,21 @@
+{
+  "name": "node_project",
+  "version": "1.0.0",
+  "description": "This is test/learning node app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Akram",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "formidable": "^1.2.1",
+    "mongodb": "^3.3.0-beta2",
+    "mongoose": "^5.6.9",
+    "mysql": "^2.17.1",
+    "nodemailer": "^6.3.0",
+    "upper-case": "^1.1.3"
+  }
+}
