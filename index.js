@@ -300,7 +300,13 @@
 
 var express=require("express");
 var bodyParser=require("body-parser"); 
-  
+var app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.set('port', (process.env.PORT || 5000));
+
+
 const mongoose = require('mongoose'); 
 // var Schema = mongoose.Schema;
 mongoose.connect('mongodb://localhost:27017/testdb'); 
@@ -313,7 +319,8 @@ db.once('open', function(callback){
 // var users = new Schema ({
 //   name:
 // });
-  
+
+
 var app=express() 
   
   
@@ -321,7 +328,11 @@ app.use(bodyParser.json());
 app.use(express.static('public')); 
 app.use(bodyParser.urlencoded({ 
     extended: true
-})); 
+}));
+app.use(express.static(__dirname + '/public'));
+app.set('views', __dirname + '/public');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
   
 app.post('/sign_up', function(req,res){
     var name = req.body.name; 
@@ -337,7 +348,10 @@ db.collection('users').insertOne(data,function(err, collection){
         if (err) throw err; 
         console.log("Record inserted Successfully"); 
               
-    }); 
+    });
+    var test = 'fsdf';
+    res.render(__dirname + "/public/user_page.html", {test:test});
+    return res.redirect('user_page.html'); 
 });
 
 app.post('/login', function(req, res) {
@@ -351,13 +365,44 @@ app.post('/login', function(req, res) {
         "password":password
     }
 db.collection('users').findOne({name: name, password: password}, function(err, result) {
-    if (err) throw err;
-    console.log("Login Succsess");
+    if(err) {
+        console.log(err);
+    }
+    else if(result){
+       console.log('Login Success');
+    }
+    else {
+        console.log('Invalid');
+    }
   })
 });
+
+app.post('/create_post', function(req,res){
+    var title = req.body.title; 
+    var post =req.body.post; 
+    // var password = req.body.password; 
   
+    var data = { 
+        "name": title, 
+        "post": post
+    } 
+db.collection('posts').insertOne(data,function(err, result){
+        if (err) throw err; 
+        console.log("Post inserted Successfully"); 
+              
+    });
+    return res.redirect('home.html'); 
+});
+
+app.get('/home', function(req, res){
+    var title = req.query["title"]; 
+    var post =req.query["post"];
+db.collection('posts').find({}).toArray(function(err, result) { 
+         console.log(result);
+    });
+});
   
-app.get('/',function(req,res){ 
+app.get('/',function(req,res){
 res.set({ 
     'Access-control-Allow-Origin': '*'
     }); 

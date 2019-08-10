@@ -1,0 +1,29 @@
+<html> 
+
+	<body> 
+	<br> 
+	<br> 
+	<br> 
+	<div class="container" > 
+		<div class="row"> 
+		<div class="col-md-3"> 
+		</div> 
+			<h1>Welcome <%= test %></h1>	
+		<div class="col-md-6 main">
+            <h1>Posts</h1>
+            <ul>
+                <% users.forEach(function(user) { %>
+                <li><%= user.title %></li>
+                <li><%= user.post %></li>
+                <% }); %>
+            </ul>           
+		</div> 
+				
+				
+		<div class="col-md-3"> 
+		</div> 
+				
+		</div> 
+	</div> 
+</body> 
+</html> 
