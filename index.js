@@ -298,16 +298,21 @@
 //   }
 // }).listen(8080);
 
-var express=require("express"); 
+var express=require("express");
 var bodyParser=require("body-parser"); 
   
 const mongoose = require('mongoose'); 
+// var Schema = mongoose.Schema;
 mongoose.connect('mongodb://localhost:27017/testdb'); 
 var db=mongoose.connection; 
 db.on('error', console.log.bind(console, "connection error")); 
-db.once('open', function(callback){ 
+db.once('open', function(callback){
     console.log("Connected"); 
-}) 
+})
+
+// var users = new Schema ({
+//   name:
+// });
   
 var app=express() 
   
@@ -318,7 +323,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); 
   
-app.post('/sign_up', function(req,res){ 
+app.post('/sign_up', function(req,res){
     var name = req.body.name; 
     var email =req.body.email; 
     var password = req.body.password; 
@@ -333,7 +338,23 @@ db.collection('users').insertOne(data,function(err, collection){
         console.log("Record inserted Successfully"); 
               
     }); 
-}) 
+});
+
+app.post('/login', function(req, res) {
+    var name = req.body.name; 
+    var email =req.body.email; 
+    var password = req.body.password; 
+
+    var data = { 
+        "name": name, 
+        "email":email, 
+        "password":password
+    }
+db.collection('users').findOne({name: name, password: password}, function(err, result) {
+    if (err) throw err;
+    console.log("Login Succsess");
+  })
+});
   
   
 app.get('/',function(req,res){ 
