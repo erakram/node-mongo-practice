@@ -301,6 +301,9 @@
 var express=require("express");
 var bodyParser=require("body-parser"); 
 var app = express();
+const multer = require("multer");
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -333,6 +336,21 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/public');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+
+//Cloudnary setup
+
+cloudinary.config({
+    cloud_name: 'cloudakram',
+    api_key: '489699538844727',
+    api_secret: '2MUsLSPAomNM01yRHa8cNMGlrc0'
+    });
+    const storage = cloudinaryStorage({
+    cloudinary: cloudinary,
+    folder: "demo",
+    allowedFormats: ["jpg", "png"],
+    transformation: [{ width: 500, height: 500, crop: "limit" }]
+    });
+    const parser = multer({ storage: storage });
   
 app.post('/sign_up', function(req,res){
     var name = req.body.name; 
@@ -370,9 +388,11 @@ db.collection('users').findOne({name: name, password: password}, function(err, r
     }
     else if(result){
        console.log('Login Success');
+       return res.redirect('user_profile.html');
     }
     else {
         console.log('Invalid');
+        return res.redirect('/');
     }
   })
 });
@@ -395,12 +415,23 @@ db.collection('posts').insertOne(data,function(err, result){
 });
 
 app.get('/home', function(req, res){
-    var title = req.query["title"]; 
-    var post =req.query["post"];
-db.collection('posts').find({}).toArray(function(err, result) { 
-         console.log(result);
-    });
+//     var title = req.query["title"]; 
+//     var post =req.query["post"];
+// db.collection('posts').find({}).toArray(function(err, result) { 
+//          console.log(result);
+//     });
+    console.log('test for get');
 });
+
+app.post('/api/images', parser.single("image"), (req, res) => {
+    console.log(req.file) // to see what is returned to you
+    const image = {};
+    image.url = req.file.url;
+    image.id = req.file.public_id;
+    Image.create(image) // save image information in database
+      .then(newImage => res.json(newImage))
+      .catch(err => console.log(err));
+  });
   
 app.get('/',function(req,res){
 res.set({ 
