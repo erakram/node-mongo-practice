@@ -304,38 +304,47 @@ var app = express();
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
+const dbConfig = require('./config/database.config.js');
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// app.set('port', (process.env.PORT || 5000));
+// app.set('port', (process.env.PORT || 5000));  
+  
+// app.use(bodyParser.json()); 
+// app.use(express.static('public')); 
+// app.use(bodyParser.urlencoded({ 
+//     extended: true
+// }));
+app.use(express.static(__dirname + '/public'));
+app.set('views', __dirname + '/public');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
-
-const mongoose = require('mongoose'); 
-// var Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost:27017/testdb'); 
-var db=mongoose.connection; 
-db.on('error', console.log.bind(console, "connection error")); 
-db.once('open', function(callback){
-    console.log("Connected"); 
+const mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost:27017/testdb');
+// mongoose.connect('mongodb://localhost:27017/apidb');
+mongoose.connect(dbConfig.url, {
+    useNewUrlParser: true
+}).then(() => {
+    console.log("Database Connected");
+}).catch(err => {
+    console.log("Database connection fails, Exiting Now.....", err);
+    process.exit();
 })
+var db=mongoose.connection; 
+// db.on('error', console.log.bind(console, "connection error")); 
+// db.once('open', function(callback){
+//     console.log("Connected"); 
+// })
 
 // var users = new Schema ({
 //   name:
 // });
 
 
-var app=express() 
-  
-  
-app.use(bodyParser.json()); 
-app.use(express.static('public')); 
-app.use(bodyParser.urlencoded({ 
-    extended: true
-}));
-app.use(express.static(__dirname + '/public'));
-app.set('views', __dirname + '/public');
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+
+
 
 //Cloudnary setup
 
@@ -414,13 +423,14 @@ db.collection('posts').insertOne(data,function(err, result){
     return res.redirect('home.html'); 
 });
 
-app.get('/home', function(req, res){
+app.get('/view', function(req, res){
 //     var title = req.query["title"]; 
 //     var post =req.query["post"];
 // db.collection('posts').find({}).toArray(function(err, result) { 
 //          console.log(result);
 //     });
-    console.log('test for get');
+    // console.log('test for get');
+    // res.json({"message": "Hi from get"});
 });
 
 app.post('/api/images', parser.single("image"), (req, res) => {
@@ -433,11 +443,23 @@ app.post('/api/images', parser.single("image"), (req, res) => {
       .catch(err => console.log(err));
   });
   
-app.get('/',function(req,res){
-res.set({ 
-    'Access-control-Allow-Origin': '*'
-    }); 
-return res.redirect('/'); 
-}).listen(8080) 
+// app.get('/',function(req,res){
+// res.set({
+//     'Access-control-Allow-Origin': '*'
+//     }); 
+// return res.redirect('/'); 
+// }).listen(8080) 
+
+app.get('/', function(req, res) {
+    res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    // console.log("Hello");
+});
+
+// Require Notes routes
+// require('./app/routes/note.routes.js')(app);
+require('./routes/note.routes.js')(app);
+app.listen(8080, () => {
+    console.log("Server is listening on port 8080");
+});
   
 
