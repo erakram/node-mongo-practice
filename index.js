@@ -301,10 +301,12 @@
 var express=require("express");
 var bodyParser=require("body-parser"); 
 var app = express();
+const dbConfig = require('./config/database.config.js');
+const mongoose = require('mongoose');
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
-const dbConfig = require('./config/database.config.js');
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -321,7 +323,7 @@ app.set('views', __dirname + '/public');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-const mongoose = require('mongoose');
+
 // mongoose.connect('mongodb://localhost:27017/testdb');
 // mongoose.connect('mongodb://localhost:27017/apidb');
 mongoose.connect(dbConfig.url, {

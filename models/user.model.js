@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema ({
     name: String,
-    age: Number,
-    gender: Boolean,
+    age: String,
+    gender: String,
     email: String,
     contact: {
-        type: Schema.ObjectId,
-        ref: 'Contacts'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Contact"
     }
 
 });
 
-module.exports = mongoose.model('Users', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
