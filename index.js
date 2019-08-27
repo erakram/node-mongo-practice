@@ -460,6 +460,7 @@ app.get('/', function(req, res) {
 // Require Notes routes
 // require('./app/routes/note.routes.js')(app);
 require('./routes/note.routes.js')(app);
+require('./routes/user.routes.js')(app);
 app.listen(8080, () => {
     console.log("Server is listening on port 8080");
 });

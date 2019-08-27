@@ -11,14 +11,14 @@ module.exports = (app) => {
     // app.get('/api/v1/users', note.findAll);
     //Retrive a single user with userId
 
-    app.get('/api/v1/users/:userId', users.findOne);
+    app.get('/user/:userId', users.findOne);
     // app.get('/api/v1/users/:userId', note.findOne);
 
     //Update a user record with userId
-    app.put('/api/v1/update_user/:userId', users.update);
+    app.put('/update_user/:userId', users.update);
     // app.put('/api/v1/update_user/:userId', note.update);
     //Delete a user with userId
-    app.delete('/app/v1/delete_user/:userId', users.delete);
+    app.delete('/delete_user/:userId', users.delete);
     // app.delete('/app/v1/delete_user/:userId', note.delete);
 }
 

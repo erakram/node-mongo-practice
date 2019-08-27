@@ -5,10 +5,10 @@ module.exports = (app) => {
 
     // Create a new Note
     app.post('/notes', notes.createNote);
-    app.post('/api/v1/create', notes.createUser);
+    // app.post('/api/v1/create', notes.createUser);
     // Retrieve all Notes
     app.get('/notes', notes.findAllNotes);
-    app.get('/api/v1/users', notes.findAllUsers);
+    // app.get('/api/v1/users', notes.findAllUsers);
 
     // Retrieve a single Note with noteId
     app.get('/notes/:noteId', notes.findOne);
